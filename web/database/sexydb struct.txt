@@ -1,0 +1,78 @@
+==> server side:
+perfil:
+id (bigint)
+nome (string)
+senha (string)
+email (string)
+capa (string: base64)
+icone (string: base64)
+cidade (string)
+estado (string)
+latitude (string)
+longitude (string)
+idade (idade)
+signo (string: 'Aquário','Peixes','Áries','Touro','Gêmeos','Cancer','Leão','Virgem','Libra',Escorpião','Sagitário','Capricórnio')
+altura (double: 2 casas decimais)
+peso (double: uma casa decimal)
+atributos (string: string separada por ';')
+
+contato:
+id (bigint)
+nome (string)
+link (string)
+
+evento:
+id (id)
+descricao (string)
+data (datetime)
+
+agenda:
+id (bigint)
+data (datetime)
+descricao (string)
+lembrar (boolean)
+
+==> client-side:
+assinante:
+id (bigint)
+nome (string)
+email (string: unique)
+telefone (string)
+senha (string)
+ultimo_acesso (datetime)
+qtd_acessos (bigint)
+status(string: 'ativo','pendente','bloqueado')
+
+resumo:
+id (bigint)
+titulo (string)
+link (string: 'fotos','videos','sobre','contos')
+data (datetime)
+
+foto:
+id (bigint)
+foto (string (base64))
+legenda (string)
+autor (bigint: perfil(id))
+data (datetime)
+
+comentario:
+id (bigint)
+autor (string: restrito aos assinantes e à dona da página)
+data (datetime)
+comentario (string)
+foto (bigint: foto(id))
+
+resposta:
+id (bigint)
+autor (string: restrito aos assinantes e à dona da página)
+data (datetime)
+comentario (string)
+referencia (bigint: comentario(id))
+
+video:
+id (bigint)
+source (string: pode ser url de um video externo e acessível ou o base64 do vídeo)
+legenda (string)
+autor (string: perfil(nome))
+data (datetime)
