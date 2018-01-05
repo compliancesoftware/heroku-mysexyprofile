@@ -1,12 +1,6 @@
 <?php
     class Dao {
         
-        private $dbHost = DatabaseProps::HOST;
-        private $dbPort = DatabaseProps::PORT;
-        private $dbName = DatabaseProps::DATABASE;
-        private $username = DatabaseProps::USERNAME;
-        private $password = DatabaseProps::PASSWORD;
-
         protected $message;
         protected $conn;
 
@@ -14,9 +8,40 @@
             $this->message = new ResponseMessage();
 
             try {
-                $dsn = 'mysql:host='.$this->dbHost.';port='.$this->dbPort.';dbname='.$this->dbName;
+                $env = getenv('CLEARDB_DATABASE_URL');
+                $envParts = explode('@',$env);
+                $envPart1 = $envParts[0];
+                $envPart2 = $envParts[1];
+                $serverAndUserAndPassword = explode(':',str_replace('//','',$envPart1));
+                
+                $server = $serverAndUserAndPassword[0];
+                $username = $serverAndUserAndPassword[1];
+                $password = $serverAndUserAndPassword[2];
+                
+                $hostAndPortAndDatabase = explode(':',$envPart2);
+                if(count($hostAndPortAndDatabase) > 1) {
+                    $host = $hostAndPortAndDatabase[0];
+                    $portAndDatabase = explode('/',$hostAndPortAndDatabase[1]);
+                    $port = $portAndDatabase[0];
+                    $database = $portAndDatabase[1];
+                }
+                else {
+                    $hostAndDatabase = explode('/',$envPart2);
+                    $port = null;
+                    $host = $hostAndDatabase[0];
+                    $database = $hostAndDatabase[1];
+                }
+
+                $database = str_replace('?reconnect=true','',$database);
+
+                if($port != null) {
+                    $dsn = $server.':host='.$host.';port='.$port.';dbname='.$database;
+                }
+                else {
+                    $dsn = $server.':host='.$host.';dbname='.$database;
+                }
         
-                $this->conn = new PDO($dsn, $this->username, $this->password, array(PDO::ATTR_PERSISTENT => true));
+                $this->conn = new PDO($dsn, $username, $password, array(PDO::ATTR_PERSISTENT => true));
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $this->message->setMessage('Conexão bem sucedida.');

@@ -7,8 +7,12 @@
         public function retrievePerfil() {
             $perfil = new Perfil();
             $perfis = parent::retrieve($perfil);
-            $perfil = $perfis[0];
-
+            if(!is_array($perfis) && get_class($perfis) == 'ResponseMessage') {
+                $perfil = $perfis;
+            }
+            else {
+                $perfil = $perfis[0];
+            }
             return $perfil;
         }
 
