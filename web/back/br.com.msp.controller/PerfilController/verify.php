@@ -1,7 +1,7 @@
 <?php
     require('../../../classloader.php');
     
-    // header('Content-type: application/json; charset=UTF-8');
+    header('Content-type: application/json; charset=UTF-8');
 
     ClassLoader::load();
     
@@ -10,6 +10,7 @@
     // $logado = $service->retrievePerfil();
 
     $logado = new Perfil();
+    $logado->setId(1);
     $logado->setNome('Keyla Sales');
     $logado->setSenha('<secret>');
     $logado->setEmail('keyla.sales@gmail.com');
@@ -36,5 +37,4 @@
     $logado->setAtributos($atributos);
     
     echo $logado->serialize();
-    // echo $logado;
 ?>
